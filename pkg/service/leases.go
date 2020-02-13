@@ -1,7 +1,6 @@
 package service
 
 import (
-	"encoding/json"
 	"fmt"
 	"path/filepath"
 	"time"
@@ -44,11 +43,8 @@ func (s *LeasesService) CreateLease(principalID string, budgetAmount float64, bu
 	if err != nil {
 		log.Fatalln("err: ", err)
 	}
-	jsonPayload, err := json.MarshalIndent(res.GetPayload(), "", "\t")
-	if err != nil {
-		log.Fatalln("err: ", err)
-	}
-	log.Infoln("Lease created:", string(jsonPayload))
+	log.Infoln("Lease created")
+	out.Dump(res.GetPayload())
 }
 
 func (s *LeasesService) EndLease(accountID, principalID string) {
@@ -75,12 +71,7 @@ func (s *LeasesService) GetLease(leaseID string) {
 	if err != nil {
 		log.Fatalln("err: ", err)
 	}
-	jsonPayload, err := json.MarshalIndent(res.GetPayload(), "", "\t")
-	if err != nil {
-		log.Fatalln("err: ", err)
-	}
-	log.Infoln(string(jsonPayload))
-
+	out.Dump(res.GetPayload())
 }
 
 func (s *LeasesService) ListLeases(acctID, principalID, nextAcctID, nextPrincipalID, leaseStatus string, pagLimit int64) {
@@ -97,11 +88,7 @@ func (s *LeasesService) ListLeases(acctID, principalID, nextAcctID, nextPrincipa
 	if err != nil {
 		log.Fatalln("err: ", err)
 	}
-	jsonPayload, err := json.MarshalIndent(res.GetPayload(), "", "\t")
-	if err != nil {
-		log.Fatalln("err: ", err)
-	}
-	log.Infoln(string(jsonPayload))
+	out.Dump(res.GetPayload())
 }
 
 func (s *LeasesService) LoginToLease(leaseID, loginProfile string, loginOpenBrowser, loginPrintCreds bool) {
@@ -113,13 +100,10 @@ func (s *LeasesService) LoginToLease(leaseID, loginProfile string, loginOpenBrow
 	res, err := apiClient.PostLeasesIDAuth(params, nil)
 	if err != nil {
 		log.Fatalln("err: ", err)
-	} else {
-		jsonPayload, err := json.MarshalIndent(res.GetPayload(), "", "\t")
-		if err != nil {
-			log.Fatalln("err: ", err)
-		}
-		log.Debug(string(jsonPayload))
 	}
+
+	out.Dump(res.GetPayload())
+
 
 	responsePayload := res.GetPayload()
 
@@ -137,6 +121,7 @@ func (s *LeasesService) LoginToLease(leaseID, loginProfile string, loginOpenBrow
 
 	if loginOpenBrowser {
 		log.Infoln("Opening AWS Console in Web Browser")
+		log.Infoln(responsePayload.ConsoleURL)
 		s.Util.OpenURL(responsePayload.ConsoleURL)
 	}
 

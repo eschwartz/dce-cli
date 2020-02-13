@@ -1,7 +1,6 @@
 package service
 
 import (
-	"encoding/json"
 	"time"
 
 	"github.com/Optum/dce-cli/client/operations"
@@ -56,11 +55,7 @@ func (s *AccountsService) GetAccount(accountID string) {
 	if err != nil {
 		log.Fatalln("err: ", err)
 	}
-	jsonPayload, err := json.MarshalIndent(res.GetPayload(), "", "\t")
-	if err != nil {
-		log.Fatalln("err: ", err)
-	}
-	log.Infoln(string(jsonPayload))
+	out.Dump(res.GetPayload())
 }
 
 func (s *AccountsService) ListAccounts() {
@@ -70,9 +65,5 @@ func (s *AccountsService) ListAccounts() {
 	if err != nil {
 		log.Fatalln("err: ", err)
 	}
-	jsonPayload, err := json.MarshalIndent(res.GetPayload(), "", "\t")
-	if err != nil {
-		log.Fatalln("err: ", err)
-	}
-	log.Infoln(string(jsonPayload))
+	out.Dump(res.GetPayload())
 }

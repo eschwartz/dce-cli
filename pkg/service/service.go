@@ -2,7 +2,7 @@ package service
 
 import (
 	"context"
-	"encoding/json"
+	"github.com/Optum/dce-cli/internal/output"
 
 	"github.com/Optum/dce-cli/configs"
 	observ "github.com/Optum/dce-cli/internal/observation"
@@ -23,12 +23,14 @@ type ServiceContainer struct {
 }
 
 var log observ.Logger
+var out output.Outputer
 var apiClient utl.APIer
 
 // New returns a new ServiceContainer given config
 func New(config *configs.Root, observation *observ.ObservationContainer, util *utl.UtilContainer) *ServiceContainer {
 
 	log = observation.Logger
+	out = &output.JSONOutput{}
 	apiClient = util.APIer
 
 	serviceContainer := ServiceContainer{
@@ -90,12 +92,4 @@ type Authenticater interface {
 
 type ResponseWithPayload interface {
 	GetPayload() interface{}
-}
-
-func printResponsePayload(res ResponseWithPayload) {
-	jsonPayload, err := json.MarshalIndent(res.GetPayload(), "", "\t")
-	if err != nil {
-		log.Fatalln("err: ", err)
-	}
-	log.Infoln(string(jsonPayload))
 }

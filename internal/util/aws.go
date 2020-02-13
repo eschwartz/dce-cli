@@ -1,7 +1,6 @@
 package util
 
 import (
-	"encoding/json"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -96,19 +95,9 @@ func (u *AWSUtil) UpdateLambdasFromS3Assets(lambdaNames []string, bucket string,
 			S3Key:        aws.String("lambda/" + name + ".zip"),
 		}
 
-		out, err := json.Marshal(input)
-		if err != nil {
-			panic(err)
-		}
-
 		updateLambdaConfig, _ := client.UpdateFunctionCode(input)
-
-		out, err = json.Marshal(updateLambdaConfig)
-		if err != nil {
-			panic(err)
-		}
-
-		log.Debugln("Updated Lambda config: ", string(out))
+		log.Debugln("Updated Lambda config: ")
+		out.Dump(updateLambdaConfig)
 	}
 	log.Infoln("Finished updating AWS Lambda functions.")
 }

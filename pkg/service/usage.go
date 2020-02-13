@@ -1,7 +1,6 @@
 package service
 
 import (
-	"encoding/json"
 	"time"
 
 	"github.com/Optum/dce-cli/client/operations"
@@ -25,11 +24,7 @@ func (s *UsageService) GetUsage(startDate, endDate float64) {
 	res, err := apiClient.GetUsage(params, nil)
 	if err != nil {
 		log.Fatalln("err: ", err)
-	} else {
-		jsonPayload, err := json.MarshalIndent(res.GetPayload(), "", "\t")
-		if err != nil {
-			log.Fatalln("err: ", err)
-		}
-		log.Infoln(string(jsonPayload))
 	}
+
+	out.Dump(res.GetPayload())
 }

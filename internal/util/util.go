@@ -2,6 +2,7 @@ package util
 
 import (
 	"context"
+	"github.com/Optum/dce-cli/internal/output"
 	"io"
 	"os"
 	"time"
@@ -31,10 +32,12 @@ type UtilContainer struct {
 }
 
 var log observ.Logger
+var out output.Outputer
 
 // New returns a new Util given config
 func New(config *configs.Root, configFile string, observation *observ.ObservationContainer) *UtilContainer {
 	log = observation.Logger
+	out = &output.JSONOutput{}
 
 	var awsSession *session.Session
 	awsSession, err := NewAWSSession(config.API.Token)
